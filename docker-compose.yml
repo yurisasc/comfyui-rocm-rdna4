@@ -1,0 +1,35 @@
+services:
+  comfyui-rocm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      /bin/bash -c "
+      . /workspace/ComfyUI/venv/bin/activate &&
+      python /workspace/ComfyUI/main.py --listen 0.0.0.0 --port 8188 --lowvram --force-fp16"
+    ports:
+      - "8188:8188"
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    volumes:
+      - ./comfyui_data:/workspace/ComfyUI/user
+      - ./storage/ComfyUI/models:/workspace/ComfyUI/models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HSA_OVERRIDE_GFX_VERSION=12.0.1
+      - PYTORCH_HIP_ALLOC_CONF=max_split_size_mb:32
+      - PYTORCH_ROCM_ARCH=gfx1201
+      - ROCM_PATH=/opt/rocm
+      - HIP_VISIBLE_DEVICES=0
+      - LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/lib64:$LD_LIBRARY_PATH
+    restart: unless-stopped
+    group_add:
+      - video
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    ipc: host
+    shm_size: 8G
