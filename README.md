@@ -80,3 +80,15 @@ docker exec -it <container_name> rocm-smi
 ```
 If this fails, make sure your host kernel supports your GPU and that `HSA_OVERRIDE_GFX_VERSION` is set in the compose file.
 
+### Missing Custom Nodes After Rebuild
+If a custom node (e.g., `audio-separation-nodes`) does not appear after a container recreation despite being in the `custom_nodes` directory:
+
+1. **Dependency Conflict:** The node may have failed its internal install script. Check logs: `docker compose logs | grep "import"`.
+2. **Reinstallation Fix:**
+   - Open **ComfyUI Manager**.
+   - **Uninstall** the problematic node.
+   - **Restart** the container: `docker compose restart`.
+   - **Reinstall** the node via the Manager.
+   - **Restart** once more.
+   This forces the node to re-run its setup script within the current environment and makes sure all local binaries are written to your persistent volume.
+

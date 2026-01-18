@@ -13,6 +13,7 @@ services:
     volumes:
       - ./comfyui_data:/workspace/ComfyUI/user
       - ./storage/ComfyUI/models:/workspace/ComfyUI/models
+      - ./storage/ComfyUI/custom_nodes:/workspace/ComfyUI/custom_nodes
       - ./storage/ComfyUI/output:/workspace/ComfyUI/output
     environment:
       - PYTHONUNBUFFERED=1
