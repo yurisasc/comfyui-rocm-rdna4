@@ -21,51 +21,58 @@ sudo usermod -aG render $USER
 
 1. **Clone & Prepare:**
    Clone this repository and create your storage directories.
-```bash
-mkdir -p storage/ComfyUI/models
-mkdir -p storage/ComfyUI/output
-```
+   ```bash
+   mkdir -p storage/comfyui/{user,models,output,input,temp}
+   ```
 
-2. **Configure Permissions (.env)**
-   Copy the example environment file and find your system IDs to ensure Docker has the correct permissions to write to your `storage` folder.
+2. **Quick Start: Use the Prebuilt Image (Docker Hub)**
+   If you prefer not to build locally, point `docker-compose.yml` to the published image `yurisasc/comfyui-rocm7.1` on Docker Hub. In the `comfyui` service, replace the `build:` block with:
+   ```yaml
+   image: yurisasc/comfyui-rocm7.1:latest
+   ```
+   Then start normally:
+   ```bash
+   docker compose up -d
+   ```
 
-```bash
-cp .env.example .env
-```
-
-   Run the following to find the `video` and `render` GIDs:
-```bash
-grep -E 'video|render' /etc/group
-```
+3. **Configure Permissions (.env)**
+   Copy the example environment file and find your system IDs to make sure Docker has the correct permissions to write to your `storage` folder.
+   ```bash
+   cp .env.example .env
+   ```
+   Find the `video` and `render` GIDs:
+   ```bash
+   grep -E 'video|render' /etc/group
+   ```
    *Example Output:* `video:x:985:user`, `render:x:989:user`.
 
-   Run the following to find your personal User ID (`PUID`) and Group ID (`PGID`):
-```bash
-id -u  # Returns PUID (likely 1000)
-id -g  # Returns PGID (likely 1000)
-```
+   Find your personal User ID (`PUID`) and Group ID (`PGID`):
+   ```bash
+   id -u  # Returns PUID (likely 1000)
+   id -g  # Returns PGID (likely 1000)
+   ```
 
    Open `.env` and update it with your findings:
-```ini
-# GPU Access (Arch/Linux specific)
-VIDEO_GID=985
-RENDER_GID=989
+   ```ini
+   # GPU Access (Arch/Linux specific)
+   VIDEO_GID=985
+   RENDER_GID=989
 
-# File Ownership (Matches your Arch User)
-PUID=1000
-PGID=1000
+   # File Ownership (Matches your Arch User)
+   PUID=1000
+   PGID=1000
 
-# Unified Storage Path
-BASE_STORAGE_PATH=./storage
-```
+   # Unified Storage Path
+   BASE_STORAGE_PATH=./storage
+   ```
 
-3. **Build and Start:**
-   Run the container (this will build the optimized image):
-```bash
-docker compose up --build -d
-```
+4. **Build the Image Yourself (Optional):**
+   If you want to build locally instead of using the prebuilt image, run:
+   ```bash
+   docker compose up --build -d
+   ```
 
-4. **Access UI:**
+5. **Access UI:**
    Navigate to `http://localhost:8188` in your web browser.
 
 ## Configuration Details
