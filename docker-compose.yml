@@ -14,7 +14,6 @@ services:
     volumes:
       - ${BASE_STORAGE_PATH}/comfyui/user:/workspace/ComfyUI/user
       - ${BASE_STORAGE_PATH}/comfyui/models:/workspace/ComfyUI/models
-      - ${BASE_STORAGE_PATH}/comfyui/temp:/workspace/ComfyUI/temp
       - ${BASE_STORAGE_PATH}/comfyui/output:/workspace/ComfyUI/output
       - ${BASE_STORAGE_PATH}/comfyui/input:/workspace/ComfyUI/input
       - ${BASE_STORAGE_PATH}/comfyui/temp:/workspace/ComfyUI/temp
