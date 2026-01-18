@@ -26,21 +26,37 @@ mkdir -p storage/ComfyUI/models
 mkdir -p storage/ComfyUI/output
 ```
 
-2. **Configure Permissions (.env):**
-   Copy the example environment file.
+2. **Configure Permissions (.env)**
+   Copy the example environment file and find your system IDs to ensure Docker has the correct permissions to write to your `storage` folder.
+
 ```bash
 cp .env.example .env
 ```
-   Find your host's Group IDs for `video` and `render`:
+
+   Run the following to find the `video` and `render` GIDs:
 ```bash
 grep -E 'video|render' /etc/group
 ```
-   *Example Output:* `video:x:985:user` and `render:x:989:user`.
-   
-   Open `.env` and update the values to match your output:
+   *Example Output:* `video:x:985:user`, `render:x:989:user`.
+
+   Run the following to find your personal User ID (`PUID`) and Group ID (`PGID`):
+```bash
+id -u  # Returns PUID (likely 1000)
+id -g  # Returns PGID (likely 1000)
+```
+
+   Open `.env` and update it with your findings:
 ```ini
+# GPU Access (Arch/Linux specific)
 VIDEO_GID=985
 RENDER_GID=989
+
+# File Ownership (Matches your Arch User)
+PUID=1000
+PGID=1000
+
+# Unified Storage Path
+BASE_STORAGE_PATH=./storage
 ```
 
 3. **Build and Start:**
